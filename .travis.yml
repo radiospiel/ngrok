@@ -1,4 +1,24 @@
-script: make release-all
+script:
+- make release-all
 install: true
-go: 
-- 1.1
+before_install: 
+- export CGO_CFLAGS="-mmacosx-version-min=10.4"
+- export CGO_LDFLAGS="-mmacosx-version-min=10.4"
+- wget https://go.googlecode.com/files/go1.1.2.src.tar.gz
+- tar xzf go1.1.2.src.tar.gz
+- pushd go/src
+- ./make.bash
+- popd
+- export GOPATH=./go
+- export PATH=$PATH:$GOPATH/bin
+after_success: 
+- sudo easy_install boto
+- NGROK="bin/ngrok" NGROKD="bin/ngrokd" VERSION=$(GOOS="" GOARCH="" GOPATH=$(pwd) go run build/version.go) python build/travis.py
+env: 
+  global: 
+  - secure: Fd5zHi58jx8lsPDv4tkRFzXSY0KnPJZuZ+LvnRcpX4+3xJsuZU6moOfrOcGqDOm7/SqZRVZRKZapE772+8sXNKPmwSXHRsZEsUgqxdehFzlVP4PQN5efOdI/quO2ibwVpZ6Idze5pelZburALd7/VbfHCTB/0P0WDMNvfHuFPQg=
+  - secure: Yg+y996B4S7zHXO8j6JrRbgMf6yilHGWv6I+7oZf02d8IHYtAb6A9DveX/q+v24O8Q9WzXRU4ZIaG5nJksVwb19qcy4vpaUbvx00COi8tg0l9hdKIotrzAs+i8q5h0xUifE1iuqYJw39vYU/9vC/727GTvOfRpBCr+edcpc9uy0=
+  - secure: CMF8ZfcoZK8AhFrmo6ljwP4ulYOSI9Pftp02rfNcM7LYPzU5HxFmcR7M4+3Qt0HAWxYrReozNQZYrV0s5jqIO0H4LZeHxgi7EHTam1BelhmHxL6VBMoR1mTi53bErWNhpoc0qyCnWMpnzNMObwtBVm9vjacm4NJMWqQjte/0Kdw=
+  matrix: 
+  - GOOS=darwin GOARCH=amd64
+language: objective-c
