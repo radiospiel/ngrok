@@ -1,5 +1,6 @@
 script:
 - make release-all
+
 install: true
 before_install: 
 - export CGO_CFLAGS="-mmacosx-version-min=10.4"
