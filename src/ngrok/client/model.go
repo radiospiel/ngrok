@@ -61,8 +61,11 @@ func newClientModel(config *Configuration, ctl mvc.Controller) *ClientModel {
 
 	// configure TLS
 	var tlsConfig *tls.Config
-	if config.TrustHostRootCerts {
-		tlsConfig = &tls.Config{}
+	if config.TrustHostRootCerts || config.TrustHostCert {
+		if config.TrustHostCert {
+			fmt.Println("**** WARNING: skipping certificate verification: THIS CONFIGURATION IS NOT SECURE.")
+		}
+		tlsConfig = &tls.Config{InsecureSkipVerify: config.TrustHostCert}
 	} else {
 		var err error
 		if tlsConfig, err = LoadTLSConfig(rootCrtPaths); err != nil {
