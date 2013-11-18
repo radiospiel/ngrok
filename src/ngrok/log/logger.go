@@ -3,11 +3,12 @@ package log
 import (
 	log "code.google.com/p/log4go"
 	"fmt"
+	"os"
 )
 
 var root log.Logger = make(log.Logger)
 
-func LogTo(target string) {
+func LogTo(target string, verbosity string) {
 	var writer log.LogWriter = nil
 
 	switch target {
@@ -20,6 +21,34 @@ func LogTo(target string) {
 	}
 
 	if writer != nil {
+		setupVerbosity(writer, verbosity)
+	}
+}
+
+func setupVerbosity(writer log.LogWriter, verbosity string) {
+	if verbosity == "" {
+		root.AddFilter("log", log.DEBUG, writer)
+		return
+	}
+	switch verbosity {
+	case "FINEST":
+		root.AddFilter("log", log.FINEST, writer)
+	case "FINE":
+		root.AddFilter("log", log.FINE, writer)
+	case "DEBUG":
+		root.AddFilter("log", log.DEBUG, writer)
+	case "TRACE":
+		root.AddFilter("log", log.TRACE, writer)
+	case "INFO":
+		root.AddFilter("log", log.INFO, writer)
+	case "WARNING":
+		root.AddFilter("log", log.WARNING, writer)
+	case "ERROR":
+		root.AddFilter("log", log.ERROR, writer)
+	case "CRITICAL":
+		root.AddFilter("log", log.CRITICAL, writer)
+	default:
+		fmt.Fprintf(os.Stderr, "Unknown verbosity setting <%s>, fallback to <DEBUG>\n", verbosity)
 		root.AddFilter("log", log.DEBUG, writer)
 	}
 }

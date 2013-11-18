@@ -17,7 +17,7 @@ func Main() {
 	}
 
 	// set up logging
-	log.LogTo(opts.logto)
+	log.LogTo(opts.logto, opts.verbosity)
 
 	// read configuration file
 	config, err := LoadConfiguration(opts)

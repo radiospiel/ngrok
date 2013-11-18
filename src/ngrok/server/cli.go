@@ -12,6 +12,7 @@ type Options struct {
 	tlsCrt     string
 	tlsKey     string
 	logto      string
+	verbosity  string
 }
 
 func parseArgs() *Options {
@@ -22,6 +23,7 @@ func parseArgs() *Options {
 	tlsCrt := flag.String("tlsCrt", "", "Path to a TLS certificate file")
 	tlsKey := flag.String("tlsKey", "", "Path to a TLS key file")
 	logto := flag.String("log", "stdout", "Write log messages to this file. 'stdout' and 'none' have special meanings")
+	verbosity := flag.String("verbosity", "DEBUG", "logging verbosity")
 
 	flag.Parse()
 
@@ -33,5 +35,6 @@ func parseArgs() *Options {
 		tlsCrt:     *tlsCrt,
 		tlsKey:     *tlsKey,
 		logto:      *logto,
+		verbosity:  *verbosity,
 	}
 }
